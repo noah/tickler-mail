@@ -1,6 +1,3 @@
-tickler-mail
-==============
-
 # Description 
 
 A script implementing "[tickler
@@ -28,7 +25,9 @@ The script simply walks this todo directory and for each directory and
 email within that directory, it compares the timestamp of the file to
 the current date + the delta of the *evaluation of the directory name*.
 
-# Example:
+The todo directory is defined in the code by the constant `TICKLE_PATH`.
+
+# Example
 
 * If on Monday I save an email X to the "in-three-days" folder, then the
 algorithm when called in the future will compare the current time to the
@@ -42,3 +41,5 @@ Notifications, for my purposes, include:
 
 1. Firing a notify-send message; and
 2. Moving the email back to the inbox (the "boomerang" event)
+
+With any luck, I'll never forget to do anything important ever again.
