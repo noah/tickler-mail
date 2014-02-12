@@ -12,6 +12,7 @@ from os import walk, stat
 from os.path import basename, dirname, join
 from glob import glob
 from email import message_from_file
+from mailbox import MaildirMessage
 from shutil import move as mv
 
 import parsedatetime as pdt
@@ -79,11 +80,13 @@ if __name__ == '__main__':
 
                 #   \/ tickle check \/
                 FILE_REALPATH = join(root, file)
-                if thetime <= remind_time:
+                if thetime >= remind_time:
                     message = None
                     with open(FILE_REALPATH, 'r') as fp:
-                        message = message_from_file(fp)
-                        message.add_header("X-Tickler", "yes")
+                        message = MaildirMessage( message_from_file(fp) )
+                        del message['X-Tickler']
+                        message['X-Tickler'] = 'yes'
+                        message.add_flag('S')
                         notify( message )
                     with open(FILE_REALPATH, 'w') as fp:
                         fp.write( unicode( message ) )
