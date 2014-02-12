@@ -40,6 +40,14 @@ notifications.
 Notifications, for my purposes, include:
 
 1. Firing a notify-send message; and
-2. Moving the email back to the inbox (the "boomerang" event)
+2. Add an `X-Tickler` header
+3. Moving the email back to the inbox (the "boomerang" event)
+
+# Protip
+
+Adding this to `muttrc` highlights messages that have been triggered and are currently "tickling":
+
+    color index white red '~h "X-Tickler:.*yes"'  
+
 
 With any luck, I'll never forget to do anything important ever again.
