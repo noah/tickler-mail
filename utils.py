@@ -1,6 +1,7 @@
 from os import walk, stat
 from time import mktime
 from datetime import datetime, timedelta
+from babel.dates import format_timedelta
 from mailbox import Maildir
 from os.path import basename, dirname
 from email.errors import MessageParseError
@@ -61,8 +62,8 @@ def tickle_iterator( path ):
         src_mbox = Maildir(box, factory=None)
         src_mbox.lock()
         for key in src_mbox.iterkeys():
+            path = '/'.join([box, src_mbox._toc[key]])
             try:
-                path        = '/'.join([box, src_mbox._toc[key]])
                 tickle_time = parse_time(basename( box ).replace('-', ' '), start_time=datetime.fromtimestamp(stat(path).st_ctime))
                 due_in      = thetime - tickle_time
                 yield {
@@ -70,11 +71,20 @@ def tickle_iterator( path ):
                         'key'       : key,
                         'boxname'   : basename( box ),
                         'path'      : path,
-                        'due_in'    : due_in,
+                        'due_in'    : format_timedelta( due_in ),
                         'due'       : due_in > timedelta(seconds=1),
+                }
+            except DateTimeParseException:
+                yield {
+                        'src'       : src_mbox,
+                        'key'       : key,
+                        'boxname'   : basename( box ),
+                        'path'      : path,
+                        'due_in'    : None
                 }
             except MessageParseError:
                 continue # malformed msg, ignore
+
         src_mbox.flush()
         src_mbox.unlock()
 

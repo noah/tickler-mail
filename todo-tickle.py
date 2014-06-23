@@ -8,7 +8,6 @@
 
 from glob import glob
 
-from babel.dates import format_timedelta
 from termcolor import colored
 
 from utils import tickle_iterator
@@ -22,7 +21,7 @@ for date, boxname, msg in sorted( [ (T['due_in'], T['boxname'], T['src'][T['key'
                                     for T in tickle_iterator( TICKLE_PATH ) ],
                                 key=lambda x: x[0]):
         print ('-' * 82)
-        print (colored(format_timedelta( date ), 'green')),
+        print (colored(date, 'green')),
         print (boxname),
         print (colored(msg['subject'], 'red')),
         print (colored(msg['from'], 'blue'))
