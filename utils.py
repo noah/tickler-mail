@@ -64,23 +64,32 @@ def tickle_iterator( path ):
         for key in src_mbox.iterkeys():
             path = '/'.join([box, src_mbox._toc[key]])
             try:
-                tickle_time = parse_time(basename( box ).replace('-', ' '), start_time=datetime.fromtimestamp(stat(path).st_ctime))
+                start_time  = datetime.fromtimestamp(stat(path).st_ctime)
+                tickle_time = parse_time(basename( box ).replace('-', ' '), start_time=start_time)
                 due_in      = thetime - tickle_time
+
+                print start_time, tickle_time
                 yield {
-                        'src'       : src_mbox,
-                        'key'       : key,
-                        'boxname'   : basename( box ),
-                        'path'      : path,
-                        'due_in'    : format_timedelta( due_in ),
-                        'due'       : due_in > timedelta(seconds=1),
+                        'src'           : src_mbox,
+                        'key'           : key,
+                        'boxname'       : basename( box ),
+                        'path'          : path,
+                        'due_in'        : format_timedelta( due_in ),
+                        'due'           : due_in > timedelta(seconds=1),
+                        'start_time'    : start_time,
+                        'tickle_time'   : tickle_time,
                 }
             except DateTimeParseException:
+                # support for free-form todo box names
                 yield {
-                        'src'       : src_mbox,
-                        'key'       : key,
-                        'boxname'   : basename( box ),
-                        'path'      : path,
-                        'due_in'    : None
+                        'src'           : src_mbox,
+                        'key'           : key,
+                        'boxname'       : basename( box ),
+                        'path'          : path,
+                        'due_in'        : None,
+                        'start_time'    : None,
+                        'tickle_time'   : None,
+                        'due'           : False,
                 }
             except MessageParseError:
                 continue # malformed msg, ignore
