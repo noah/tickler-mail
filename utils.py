@@ -68,7 +68,6 @@ def tickle_iterator( path ):
                 tickle_time = parse_time(basename( box ).replace('-', ' '), start_time=start_time)
                 due_in      = thetime - tickle_time
 
-                print start_time, tickle_time
                 yield {
                         'src'           : src_mbox,
                         'key'           : key,
