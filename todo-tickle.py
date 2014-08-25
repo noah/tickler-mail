@@ -22,7 +22,7 @@ INDENT      = ' ' * 4
 LINE_LEN    = 102
 
 tickles = sorted([T for T in tickle_iterator(TICKLE_PATH) ], key=lambda
-                 x: x['due_in'])
+                 d: (d['due_in'], d['tickle_time']))
 for T in tickles:
 
     msg = T['src'][T['key']]
