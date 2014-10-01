@@ -17,14 +17,18 @@ from utils import tickle_iterator
 # TODO:
 # add INBOX folder, but only for messages with X-Tickler:yes
 
-TICKLE_PATH = glob("/home/noah*/mail/noah*@*.com/@todo")[0]
-INDENT      = ' ' * 4
-LINE_LEN    = 102
+TICKLE_PATH     = glob("/home/noah*/mail/noah*@*.com/@todo")[0]
+DUE_NOW_PATH    = glob("/home/noah*/mail/noah*@*.com/INBOX")[0]
+INDENT          = ' ' * 4
+LINE_LEN        = 102
 
-tickles = sorted([T for T in tickle_iterator(TICKLE_PATH) ], key=lambda
-                 d: (d['due_in'], d['tickle_time']))
+tickles = sorted(
+    [ T for T in tickle_iterator(TICKLE_PATH)   ] +
+    [ T for T in tickle_iterator(DUE_NOW_PATH)  ], key=lambda d: (not d['due_in'],
+                                                                  not d['due'],
+                                                                  d['start_time']), reverse=True)
+
 for T in tickles:
-
     msg = T['src'][T['key']]
     print colored(('-' * LINE_LEN), 'magenta')
     if T['due_in'] is not None:
