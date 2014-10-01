@@ -21,7 +21,7 @@ if __name__ == '__main__':
             # mark as tickling
             msg = T['src'][T['key']]
             del msg['X-Tickler']
-            msg['X-Tickler'] = 'yes'
+            msg['X-Tickler'] = T['tickle_time']
             # mark read
             msg.add_flag('S')
             # notify
