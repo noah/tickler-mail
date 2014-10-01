@@ -64,9 +64,20 @@ def tickle_iterator( path ):
         for key in src_mbox.iterkeys():
             path = '/'.join([box, src_mbox._toc[key]])
             try:
-                start_time  = datetime.fromtimestamp(stat(path).st_ctime)
-                tickle_time = parse_time(basename( box ).replace('-', ' '), start_time=start_time)
-                due_in      = thetime - tickle_time
+                tickle_time = None
+                start_time  = thetime
+                if src_mbox[key]['X-Tickler']:
+                    # already tickling (probably past due).  get tickler time from tickler header.
+                    try:
+                        tickle_time = parse_time( src_mbox[key]['X-Tickler'] )
+                    except Exception, e:
+                        print e
+                else:
+                    # compute tickle time from mailbox name
+                    start_time  = datetime.fromtimestamp(stat(path).st_ctime)
+                    tickle_time = parse_time(basename( box ).replace('-', ' '), start_time=start_time)
+
+                due_in = thetime - tickle_time
 
                 yield {
                         'src'           : src_mbox,
